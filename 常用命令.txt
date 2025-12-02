@@ -1,0 +1,18 @@
+训练
+python train.py -c configs/deimv2/deimv2_dinov3_s_coco.yml --use-amp --seed=0 -t ./ckpts/deimv2_dinov3_s_coco.pth
+
+测试验证
+python train.py -c configs/deimv2/deimv2_dinov3_s_coco.yml --test-only -r ./outputs/deimv2_dinov3_s_coco/best_stg1.pth
+
+图片测试
+python tools/inference/torch_inf.py -c configs/deimv2/deimv2_dinov3_s_coco.yml -r ./outputs/deimv2_dinov3_s_coco/best_stg1.pth --input ./kailiehuahen/images/11ct.jpg --device cuda:0
+
+
+导出onnx
+python tools/deployment/export_onnx.py --check -c configs/deimv2/deimv2_dinov3_s_coco.yml -r ./outputs/deimv2_dinov3_s_coco/best_stg1.pth
+
+
+python tools/deployment/export_onnx.py --check -c configs/deimv2/deimv2_dinov3_m_coco.yml -r ./outputs/deimv2_dinov3_m_huahenkailie_2025_11_21/best_stg1.pth --simplify
+
+测试onnx
+python tools/inference/onnx_inf.py --onnx ./outputs/deimv2_dinov3_s_huahenkailie_2025_11_28/best_stg1.onnx --input ./测试图片 -ms s
