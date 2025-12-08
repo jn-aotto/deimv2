@@ -54,6 +54,10 @@ class PadToSize(T.Pad):
         Mask,
         BoundingBoxes,
     )
+
+    def transform(self, inpt: Any, params: Dict[str, Any]) -> Any:
+        return self._transform(inpt, params)
+
     def _get_params(self, flat_inputs: List[Any]) -> Dict[str, Any]:
         sp = F.get_spatial_size(flat_inputs[0])
         h, w = self.size[1] - sp[0], self.size[0] - sp[1]
@@ -101,6 +105,9 @@ class ConvertBoxes(T.Transform):
         self.fmt = fmt
         self.normalize = normalize
 
+    def transform(self, inpt: Any, params: Dict[str, Any]) -> Any:
+        return self._transform(inpt, params)
+
     def _transform(self, inpt: Any, params: Dict[str, Any]) -> Any:
         spatial_size = getattr(inpt, _boxes_keys[1])
         if self.fmt:
@@ -123,6 +130,9 @@ class ConvertPILImage(T.Transform):
         super().__init__()
         self.dtype = dtype
         self.scale = scale
+
+    def transform(self, inpt: Any, params: Dict[str, Any]) -> Any:
+        return self._transform(inpt, params)
 
     def _transform(self, inpt: Any, params: Dict[str, Any]) -> Any:
         inpt = F.pil_to_tensor(inpt)
