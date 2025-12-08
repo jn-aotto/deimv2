@@ -53,9 +53,9 @@ DEIMTransformer:
 
   num_layers: 6
   eval_idx: -1
-  num_queries: 100
+  num_queries: 10
 
-  num_denoising: 100
+  num_denoising: 5
   label_noise_ratio: 0.5
   box_noise_scale: 1.0
 
@@ -75,7 +75,7 @@ DEIMTransformer:
   dim_feedforward: 2048
 
 PostProcessor:
-  num_top_queries: 100
+  num_top_queries: 10
 
 
 ## DEIM LR-Scheduler

@@ -12,13 +12,13 @@ train_dataloader:
   dataset: 
     type: CocoDetection
     img_folder: F:\DATA\DWX\fengehou\JPEGImages/
-    ann_file: F:\DATA\DWX\fengehou\coco_ann/train.json
+    ann_file: F:\DATA\DWX\fengehou\coco_ann_new/train.json
     return_masks: False
     transforms:
       type: Compose
       ops: ~
   shuffle: True
-  num_workers: 8
+  num_workers: 4
   drop_last: True 
   collate_fn:
     type: BatchImageCollateFunction
@@ -29,13 +29,13 @@ val_dataloader:
   dataset: 
     type: CocoDetection
     img_folder: F:\DATA\DWX\fengehou\JPEGImages/
-    ann_file: F:\DATA\DWX\fengehou\coco_ann/val.json
+    ann_file: F:\DATA\DWX\fengehou\coco_ann_new/val.json
     return_masks: False
     transforms:
       type: Compose
       ops: ~ 
   shuffle: False
-  num_workers: 8
+  num_workers: 4
   drop_last: False
   collate_fn:
     type: BatchImageCollateFunction
