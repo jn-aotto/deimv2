@@ -14,22 +14,44 @@ import torchvision.transforms as T
 from PIL import Image, ImageDraw, ImageFont
 
 
-def resize_with_aspect_ratio(image, size, interpolation=Image.BILINEAR):
-    """Resizes an image while maintaining aspect ratio and pads it."""
-    original_width, original_height = image.size
+#PIL处理方式
+# def resize_with_aspect_ratio(image, size, interpolation=Image.BILINEAR):
+#     """Resizes an image while maintaining aspect ratio and pads it."""
+#     original_width, original_height = image.size
     
+#     ratio = min(size / original_width, size / original_height)
+#     new_width = int(original_width * ratio)
+#     new_height = int(original_height * ratio)
+#     image = image.resize((new_width, new_height), interpolation)
+
+#     # Create a new image with the desired size and paste the resized image onto it
+#     new_image = Image.new("RGB", (size, size))
+#     new_image.paste(image, ((size - new_width) // 2, (size - new_height) // 2))
+#     return new_image, ratio, (size - new_width) // 2, (size - new_height) // 2
+
+#opencv处理方式
+def resize_with_aspect_ratio(image, size, interpolation=cv2.INTER_LINEAR):
+    """使用OpenCV保持宽高比缩放并填充图像"""
+    # 如果输入是PIL.Image，先转成numpy数组
+    if isinstance(image, Image.Image):
+        image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+    original_height, original_width = image.shape[:2]
     ratio = min(size / original_width, size / original_height)
     new_width = int(original_width * ratio)
     new_height = int(original_height * ratio)
-    image = image.resize((new_width, new_height), interpolation)
+    # OpenCV缩放
+    resized = cv2.resize(image, (new_width, new_height), interpolation=interpolation)
+    # 创建目标大小的画布并居中粘贴
+    canvas = np.full((size, size, 3), 0, dtype=np.uint8)  # 114为灰色填充
+    pad_w = (size - new_width) // 2
+    pad_h = (size - new_height) // 2
+    canvas[pad_h:pad_h + new_height, pad_w:pad_w + new_width] = resized
+    # 转回PIL格式以保持接口一致
+    canvas_pil = Image.fromarray(cv2.cvtColor(canvas, cv2.COLOR_BGR2RGB))
+    return canvas_pil, ratio, pad_w, pad_h
 
-    # Create a new image with the desired size and paste the resized image onto it
-    new_image = Image.new("RGB", (size, size))
-    new_image.paste(image, ((size - new_width) // 2, (size - new_height) // 2))
-    return new_image, ratio, (size - new_width) // 2, (size - new_height) // 2
 
-
-def draw(images, labels, boxes, scores, ratios, paddings, thrh=0.4):
+def draw(images, labels, boxes, scores, ratios, paddings, thrh=0.2):
     result_images = []
     for i, im in enumerate(images):
         draw = ImageDraw.Draw(im)
