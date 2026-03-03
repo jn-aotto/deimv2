@@ -4,7 +4,8 @@
 
 #### configs/deimv2:  主配置文件夹。
 
-#### 配置的yaml文件包括：           dataset       数据集路径及类别参数；
+#### 配置的yaml文件包括：           
+#### dataset       数据集路径及类别参数；
 
 #### runtime       一些重要超参数的配置
 
